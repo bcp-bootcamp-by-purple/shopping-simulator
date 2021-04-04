@@ -1,0 +1,23 @@
+info:
+  app:
+    name: Spring Boot - RestTemplate CRUD Rest Client Example
+    description: Spring Boot - RestTemplate CRUD Rest Client Example
+    version: 1.0.0
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate: ERROR
+    com.bcp.bootcamp: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:simulatorbd
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 123
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect

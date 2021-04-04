@@ -1,0 +1,42 @@
+DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS fees;
+DROP TABLE IF EXISTS pay_days;
+DROP TABLE IF EXISTS teas;
+
+CREATE TABLE cards (
+  id INT AUTO_INCREMENT  PRIMARY KEY,
+  type VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE fees (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  min INT NOT NULL,
+  max INT NOT NULL
+);
+
+CREATE TABLE pay_days (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  day_number INT NOT NULL
+);
+
+CREATE TABLE teas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  value VARCHAR(10) NOT NULL
+);
+
+INSERT INTO cards (type) VALUES
+('Clásica'),
+('Oro'),
+('Black');
+
+INSERT INTO fees (min, max) VALUES
+(1, 36);
+
+INSERT INTO pay_days (day_number) VALUES
+(5),
+(20);
+
+INSERT INTO teas (value) VALUES
+(99.90),
+(95.90),
+(90.90);

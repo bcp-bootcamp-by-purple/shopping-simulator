@@ -6,7 +6,9 @@ import com.bcp.bootcamp.purple.shoppingsimulator.model.PayDay;
 import com.bcp.bootcamp.purple.shoppingsimulator.model.SimulationRequest;
 import com.bcp.bootcamp.purple.shoppingsimulator.model.SimulationResponse;
 import com.bcp.bootcamp.purple.shoppingsimulator.model.Tea;
+import com.bcp.bootcamp.purple.shoppingsimulator.service.ShoppingSimulatorService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,31 +16,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v0/shopping-simulator")
 public class ShoppingSimulatorController {
 
+  private final ShoppingSimulatorService simulatorService;
+
   @GetMapping("/cards-types")
   public List<Card> getCardTypes() {
-    return null;
+    return simulatorService.getCardTypes();
   }
 
   @GetMapping("/fees")
   public Fees getFees() {
-    return null;
+    return simulatorService.getFees();
   }
 
   @GetMapping("/pay-days")
   public List<PayDay> getPayDays() {
-    return null;
+    return simulatorService.getPayDays();
   }
 
   @GetMapping("/teas")
   public List<Tea> getTeas() {
-    return null;
+    return simulatorService.getTeas();
   }
 
   @PostMapping("/simulation")
   public SimulationResponse simulation(@RequestBody SimulationRequest request) {
-    return null;
+    return simulatorService.simulation(request);
   }
 }
