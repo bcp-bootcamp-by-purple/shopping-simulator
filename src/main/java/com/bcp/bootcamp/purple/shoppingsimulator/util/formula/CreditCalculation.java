@@ -1,5 +1,7 @@
 package com.bcp.bootcamp.purple.shoppingsimulator.util.formula;
 
+import java.time.LocalDate;
+
 public class CreditCalculation {
 
   /**
@@ -70,9 +72,19 @@ public class CreditCalculation {
    * @param monthlyFee Cuota mensual a pagar sin gastos.
    * @return interés compensatorio vencido.
    */
-  public static double CalculateCompensatoryInterestDueFee(double interestRate,
+  public static double calculateCompensatoryInterestDueFee(double interestRate,
                                                            double numberDaysLate,
                                                            double monthlyFee) {
     return (Math.pow((interestRate + 1), (numberDaysLate / 360)) - 1) * monthlyFee;
+  }
+
+  /**
+   * Calculo de la fecha de la primera cuota.
+   * @return fecha con formato 1/12/2021
+   */
+  public static String calculateFirstDateFee() {
+    var monthValue = LocalDate.now().plusMonths(2).getMonthValue();
+    var year = LocalDate.now().getYear();
+    return String.format("1/{}/{}", monthValue, year);
   }
 }

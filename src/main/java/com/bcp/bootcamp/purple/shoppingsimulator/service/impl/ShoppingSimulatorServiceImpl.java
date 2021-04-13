@@ -11,6 +11,8 @@ import com.bcp.bootcamp.purple.shoppingsimulator.repository.FeesRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.repository.PayDayRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.repository.TeaRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.service.ShoppingSimulatorService;
+import com.bcp.bootcamp.purple.shoppingsimulator.util.enums.Status;
+import com.bcp.bootcamp.purple.shoppingsimulator.util.formula.CreditCalculation;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,16 @@ public class ShoppingSimulatorServiceImpl implements ShoppingSimulatorService {
 
   @Override
   public SimulationResponse simulation(SimulationRequest request) {
-    return null;
+    var tem = CreditCalculation.calculateTem(request.getTea());
+    var monthlyFee = CreditCalculation.calculateMonthlyFee(request.getAmount(),
+      tem, request.getFees());
+    var firstDateFee = CreditCalculation.calculateFirstDateFee();
+
+    return SimulationResponse.builder()
+      .feesAmount(monthlyFee)
+      .currency(request.getCurrency())
+      .firstPaymentDate(firstDateFee)
+      .status(Status.SUCCESS.getValue()).build();
   }
+
 }
