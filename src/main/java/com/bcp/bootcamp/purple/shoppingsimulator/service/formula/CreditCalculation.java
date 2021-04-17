@@ -1,7 +1,11 @@
-package com.bcp.bootcamp.purple.shoppingsimulator.util.formula;
+package com.bcp.bootcamp.purple.shoppingsimulator.service.formula;
 
+import com.bcp.bootcamp.purple.shoppingsimulator.util.format.Format;
 import java.time.LocalDate;
+import java.util.stream.Stream;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CreditCalculation {
 
   /**
@@ -9,8 +13,12 @@ public class CreditCalculation {
    * @param tea Tasa efectiva anual.
    * @return Tasa efectiva mensua.
    */
-  public static double calculateTem(double tea) {
-    return (Math.pow(1 + (tea/100), (30/360)) - 1) * 100;
+  public double calculateTem(double tea) {
+    return Stream.of(tea)
+      .map(t -> Math.pow(1 + (t/100), (30.0/360.0)))
+      .map(pow -> (pow - 1) * 100)
+      .map(tem -> Format.roundNumber(tem, 2))
+      .findFirst().get();
   }
 
   /**
@@ -20,8 +28,10 @@ public class CreditCalculation {
    * @param fees número de cuotas del crédito.
    * @return cuota mensual a pagar sin gastos.
    */
-  public static double calculateMonthlyFee(double loanAmount, double tem, int fees) {
-    return loanAmount * ((tem * Math.pow(1 + tem, fees))/(Math.pow(1 + tem, fees) - 1));
+  public double calculateMonthlyFee(double loanAmount, double tem, int fees) {
+    return Format.roundNumber(
+      loanAmount * ((tem/100 * Math.pow(1 + tem/100, fees)) / (Math.pow(1 + tem/100, fees) - 1)),
+      2);
   }
 
   /**
@@ -31,9 +41,11 @@ public class CreditCalculation {
    * @param capitalBalance saldo capital.
    * @return interés de la cuota.
    */
-  public static double calculateMonthlyInterestFee(double tiea, int numberDaysFee,
+  public double calculateMonthlyInterestFee(double tiea, int numberDaysFee,
                                                    double capitalBalance) {
-    return (Math.pow((tiea + 1), (numberDaysFee / 360)) - 1) * capitalBalance;
+    return Format.roundNumber(
+      (Math.pow((tiea/100 + 1), (numberDaysFee * 1.0 / 360)) - 1) * capitalBalance,
+      2);
   }
 
   /**
@@ -42,7 +54,7 @@ public class CreditCalculation {
    * @param insuranceRate tasa de seguro de desgravamen.
    * @return seguro de desgravamen.
    */
-  public static double calculateCreditLifeInsurance(double balanceMonth, double insuranceRate) {
+  public double calculateCreditLifeInsurance(double balanceMonth, double insuranceRate) {
     return balanceMonth * insuranceRate;
   }
 
@@ -52,7 +64,7 @@ public class CreditCalculation {
    * @param insuranceFee seguro de la cuota.
    * @return cuota final.
    */
-  public static double calculateFinalFee(double monthlyFee, double insuranceFee) {
+  public double calculateFinalFee(double monthlyFee, double insuranceFee) {
     return monthlyFee + insuranceFee;
   }
 
@@ -61,7 +73,7 @@ public class CreditCalculation {
    * @param TCEM tasa del costo efectivo mensual.
    * @return tasa del costo efectivo anual.
    */
-  public static double calculateAnnualEffectiveCostRate(double TCEM) {
+  public double calculateAnnualEffectiveCostRate(double TCEM) {
     return Math.pow((1 + TCEM), 12) - 1;
   }
 
@@ -72,7 +84,7 @@ public class CreditCalculation {
    * @param monthlyFee Cuota mensual a pagar sin gastos.
    * @return interés compensatorio vencido.
    */
-  public static double calculateCompensatoryInterestDueFee(double interestRate,
+  public double calculateCompensatoryInterestDueFee(double interestRate,
                                                            double numberDaysLate,
                                                            double monthlyFee) {
     return (Math.pow((interestRate + 1), (numberDaysLate / 360)) - 1) * monthlyFee;
@@ -82,9 +94,9 @@ public class CreditCalculation {
    * Calculo de la fecha de la primera cuota.
    * @return fecha con formato 1/12/2021
    */
-  public static String calculateFirstDateFee() {
-    var monthValue = LocalDate.now().plusMonths(2).getMonthValue();
+  public String calculateFirstDateFee(String payDay) {
+    var monthValue = LocalDate.now().plusMonths(1).getMonthValue();
     var year = LocalDate.now().getYear();
-    return String.format("1/{}/{}", monthValue, year);
+    return String.format("%s/%d/%d", payDay, monthValue, year);
   }
 }

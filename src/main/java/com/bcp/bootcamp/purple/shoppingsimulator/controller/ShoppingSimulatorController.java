@@ -42,8 +42,8 @@ public class ShoppingSimulatorController {
     return simulatorService.getTeas();
   }
 
-  @PostMapping("/simulation")
-  public SimulationResponse simulation(@RequestBody SimulationRequest request) {
-    return simulatorService.simulation(request);
+  @PostMapping("/calculation")
+  public SimulationResponse calculateShopping(@RequestBody SimulationRequest request) {
+    return simulatorService.calculateShopping(request);
   }
 }

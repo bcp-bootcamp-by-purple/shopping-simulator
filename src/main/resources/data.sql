@@ -37,6 +37,6 @@ INSERT INTO pay_days (day_number) VALUES
 (20);
 
 INSERT INTO teas (value) VALUES
-(99.90),
-(95.90),
-(90.90);
+('99.90%'),
+('95.90%'),
+('90.90%');

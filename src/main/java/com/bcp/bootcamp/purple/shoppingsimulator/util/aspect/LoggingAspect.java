@@ -29,6 +29,7 @@ public class LoggingAspect {
    */
   @Pointcut("within(@org.springframework.stereotype.Repository *)" +
     " || within(@org.springframework.stereotype.Service *)" +
+    " || within(@org.springframework.stereotype.Component *)" +
     " || within(@org.springframework.web.bind.annotation.RestController *)")
   public void springBeanPointcut() {
     // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -39,6 +40,7 @@ public class LoggingAspect {
    */
   @Pointcut("within(com.bcp.bootcamp.purple.shoppingsimulator..*)" +
     " || within(com.bcp.bootcamp.purple.shoppingsimulator.service..*)" +
+    " || within(com.bcp.bootcamp.purple.shoppingsimulator.service.formula..*)" +
     " || within(com.bcp.bootcamp.purple.shoppingsimulator.controller..*)")
   public void applicationPackagePointcut() {
     // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -50,7 +52,7 @@ public class LoggingAspect {
    * @return
    * @throws Throwable
    */
-  @Around("applicationPackagePointcut() && springBeanPointcut()")
+  @Around("applicationPackagePointcut() || springBeanPointcut()")
   public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
     if (log.isDebugEnabled()) {
       log.debug("Enter: {}.{} with arguments = {}",
@@ -82,7 +84,8 @@ public class LoggingAspect {
    * @param joinPoint
    * @param result
    */
-  @AfterReturning(pointcut = "applicationPackagePointcut() && springBeanPointcut()", returning = "result")
+  @AfterReturning(pointcut = "applicationPackagePointcut() || springBeanPointcut()", returning =
+    "result")
   public void logAfterReturning(JoinPoint joinPoint, Object result) {
     log.debug("Return: {}.{} with result = {}",
       joinPoint.getTarget().getClass().getSimpleName(),
@@ -97,7 +100,8 @@ public class LoggingAspect {
    * @param joinPoint join point for advice
    * @param error exception
    */
-  @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "error")
+  @AfterThrowing(pointcut = "applicationPackagePointcut() || springBeanPointcut()", throwing =
+    "error")
   public void logAfterThrowing(JoinPoint joinPoint, Throwable error) {
     log.error("Exception in {}.{} with cause = {}",
       joinPoint.getTarget().getClass().getSimpleName(),

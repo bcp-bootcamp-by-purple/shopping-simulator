@@ -11,8 +11,9 @@ import com.bcp.bootcamp.purple.shoppingsimulator.repository.FeesRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.repository.PayDayRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.repository.TeaRepository;
 import com.bcp.bootcamp.purple.shoppingsimulator.service.ShoppingSimulatorService;
+import com.bcp.bootcamp.purple.shoppingsimulator.service.formula.CreditCalculation;
 import com.bcp.bootcamp.purple.shoppingsimulator.util.enums.Status;
-import com.bcp.bootcamp.purple.shoppingsimulator.util.formula.CreditCalculation;
+import com.bcp.bootcamp.purple.shoppingsimulator.util.format.Format;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ShoppingSimulatorServiceImpl implements ShoppingSimulatorService {
   private final FeesRepository feesRepository;
   private final PayDayRepository payDayRepository;
   private final TeaRepository teaRepository;
+  private final CreditCalculation creditCalculation;
 
   @Override
   public List<Card> getCardTypes() {
@@ -47,14 +49,15 @@ public class ShoppingSimulatorServiceImpl implements ShoppingSimulatorService {
   }
 
   @Override
-  public SimulationResponse simulation(SimulationRequest request) {
-    var tem = CreditCalculation.calculateTem(request.getTea());
-    var monthlyFee = CreditCalculation.calculateMonthlyFee(request.getAmount(),
+  public SimulationResponse calculateShopping(SimulationRequest request) {
+    var tem = creditCalculation
+      .calculateTem(Double.parseDouble(request.getTea().substring(0, request.getTea().length() - 1)));
+    var monthlyFee = creditCalculation.calculateMonthlyFee(request.getAmount(),
       tem, request.getFees());
-    var firstDateFee = CreditCalculation.calculateFirstDateFee();
+    var firstDateFee = creditCalculation.calculateFirstDateFee(request.getPayDay());
 
     return SimulationResponse.builder()
-      .feesAmount(monthlyFee)
+      .feesAmount(Format.roundNumber(monthlyFee, 2))
       .currency(request.getCurrency())
       .firstPaymentDate(firstDateFee)
       .status(Status.SUCCESS.getValue()).build();

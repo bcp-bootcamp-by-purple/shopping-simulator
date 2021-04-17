@@ -14,5 +14,5 @@ public interface ShoppingSimulatorService {
   Fees getFees();
   List<PayDay> getPayDays();
   List<Tea> getTeas();
-  SimulationResponse simulation(SimulationRequest request);
+  SimulationResponse calculateShopping(SimulationRequest request);
 }
